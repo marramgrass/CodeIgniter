@@ -7,6 +7,7 @@ class MY_FacebookController extends CI_Controller
 	protected $_facebook		= false;
 	protected $_fbid			= false;
 	protected $_signed_request	= false;
+	protected $_page			= false;
 	
 	public function __construct()
 	{
@@ -24,29 +25,39 @@ class MY_FacebookController extends CI_Controller
 	{
 		$this->_facebook = new Facebook(array(
 			'appId' => $this->config->item('fb_app_id'),
-			'secret' => $this->config->item('fb_app_secret'),
-			'cookie' => true)
+			'secret' => $this->config->item('fb_app_secret')
+			)
 		);
 		
 		// check for an FB signed_request, and stash it to the session
 		// or grab an old one from the session
+		// handle the page array separately, as it won't be included in
+		// a signed_request that comes via the JS SDK
 		$this->_signed_request = $this->_facebook->getSignedRequest();
 		if ($this->_signed_request) {
 			// _log('Have signed request');
 			$this->session->set_userdata('fbsr', serialize($this->_signed_request));
+			
+			if (array_key_exists('page', $this->_signed_request)) {
+				$this->_page = $this->_signed_request['page'];
+				$this->session->set_userdata('fbpage', serialize($this->_page));
+			}
+			else {
+				$sess_page = $this->session->userdata('fbpage');
+				$this->_page = $sess_page ? unserialize($sess_page) : false;
+			}
 		}
 		else {
 			// _log('Retrieving SR from session in '.$_SERVER['HTTP_USER_AGENT']);
 			$sess_sr = $this->session->userdata('fbsr');
-			if ($sess_sr) {
-				$this->_signed_request = unserialize($sess_sr);
-			}
-			else {
-				
-			}
+			$this->_signed_request = $sess_sr ? unserialize($sess_sr) : false;
+			
+			$sess_page = $this->session->userdata('fbpage');
+			$this->_page = $sess_page ? unserialize($sess_page) : false;
 		}
+		
 		// then set _fbid
-		if (isset($this->_signed_request['user_id'])) {
+		if ($this->_signed_request && isset($this->_signed_request['user_id'])) {
 			$this->_fbid = $this->_signed_request['user_id'];
 			// _log('FBID: '.$this->_fbid);
 		}
@@ -57,14 +68,8 @@ class MY_FacebookController extends CI_Controller
 	{
 		$liked = false;
 		
-		if ($this->_signed_request && array_key_exists('page', $this->_signed_request) && array_key_exists('liked', $this->_signed_request['page'])) {
-				$liked = $this->_signed_request['page']['liked'];
-		}
-		else if ($this->_signed_request) {
-			// _log($this->_signed_request.'  '.$_SERVER['HTTP_USER_AGENT']);
-		}
-		else {
-			// _log('No signed request  '.$_SERVER['HTTP_USER_AGENT']."  ----  ".print_r($this->_signed_request, TRUE));
+		if ($this->_page &&  array_key_exists('liked', $this->_page)) {
+				$liked = $this->_page['liked'];
 		}
 		
 		return $liked;
