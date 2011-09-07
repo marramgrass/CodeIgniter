@@ -61,10 +61,10 @@ class MY_FacebookController extends CI_Controller
 				$liked = $this->_signed_request['page']['liked'];
 		}
 		else if ($this->_signed_request) {
-			error_log($this->_signed_request.'  '.$_SERVER['HTTP_USER_AGENT']);
+			// _log($this->_signed_request.'  '.$_SERVER['HTTP_USER_AGENT']);
 		}
 		else {
-			error_log('No signed request  '.$_SERVER['HTTP_USER_AGENT']."  ----  ".print_r($this->_signed_request, TRUE));
+			// _log('No signed request  '.$_SERVER['HTTP_USER_AGENT']."  ----  ".print_r($this->_signed_request, TRUE));
 		}
 		
 		return $liked;
