@@ -33,7 +33,7 @@ class CI_Security {
 	 * @access protected
 	 */
 	protected $_xss_hash			= '';
-	
+
 	/**
 	 * Random Hash for Cross Site Request Forgery Protection Cookie
 	 *
@@ -41,7 +41,7 @@ class CI_Security {
 	 * @access protected
 	 */
 	protected $_csrf_hash			= '';
-	
+
 	/**
 	 * Expiration time for Cross Site Request Forgery Protection Cookie
 	 * Defaults to two hours (in seconds)
@@ -50,7 +50,7 @@ class CI_Security {
 	 * @access protected
 	 */
 	protected $_csrf_expire			= 7200;
-	
+
 	/**
 	 * Token name for Cross Site Request Forgery Protection Cookie
 	 *
@@ -58,7 +58,7 @@ class CI_Security {
 	 * @access protected
 	 */
 	protected $_csrf_token_name		= 'ci_csrf_token';
-	
+
 	/**
 	 * Cookie name for Cross Site Request Forgery Protection Cookie
 	 *
@@ -66,14 +66,14 @@ class CI_Security {
 	 * @access protected
 	 */
 	protected $_csrf_cookie_name	= 'ci_csrf_token';
-	
+
 	/**
 	 * List of never allowed strings
 	 *
 	 * @var array
 	 * @access protected
 	 */
-	
+
 	protected $_never_allowed_str = array(
 					'document.cookie'	=> '[removed]',
 					'document.write'	=> '[removed]',
@@ -139,7 +139,7 @@ class CI_Security {
 		{
 			return $this->csrf_set_cookie();
 		}
-		
+
 		// Check if URI has been whitelisted from CSRF checks
 		if ($exclude_uris = config_item('csrf_exclude_uris'))
 		{
@@ -171,9 +171,9 @@ class CI_Security {
 		unset($_COOKIE[$this->_csrf_cookie_name]);
 		$this->_csrf_set_hash();
 		$this->csrf_set_cookie();
-		
+
 		log_message('debug', "CSRF token verified");
-		
+
 		return $this;
 	}
 
