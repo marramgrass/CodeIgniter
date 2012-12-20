@@ -50,7 +50,7 @@ if ( ! function_exists('site_url'))
 
 /**
  * Base URL
- * 
+ *
  * Create a local URL based on your basepath.
  * Segments can be passed in as a string or an array, same as site_url
  * or a URL to a file can be passed in, e.g. to an image file.
@@ -512,7 +512,7 @@ if ( ! function_exists('url_title'))
 			$str = strtolower($str);
 		}
 
-		return trim(stripslashes($str));
+		return trim(trim(stripslashes($str)), $replace);
 	}
 }
 
@@ -527,7 +527,7 @@ if ( ! function_exists('url_title'))
  *
  * @access	public
  * @param	string	the URL
- * @param	string	the method: location or redirect
+ * @param	string	the method: location or refresh
  * @return	string
  */
 if ( ! function_exists('redirect'))
